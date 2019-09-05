@@ -24,7 +24,16 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  'https:api.github.com/users/tetondan' ,
+  'https:api.github.com/users/dustinmyers' ,
+  'https:api.github.com/users/justsml' ,
+  'https:api.github.com/users/luishrd' ,
+  'https:api.github.com/users/bigknell',
+  'https:api.github.com/users/dylanmestyanek',
+  'https:api.github.com/users/jeremyRogel',
+  'https:api.github.com/users/brandybecker',
+];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -53,3 +62,90 @@ const followersArray = [];
   luishrd
   bigknell
 */
+const container=document.querySelector('.cards');
+ 
+axios.get('https://api.github.com/users/J-man2015')
+ .then((response)=>{
+  console.log('this is the response:', response.data );
+  
+     container.appendChild(cardBuilder(response.data))
+    
+  })
+ .catch((error)  =>{
+   
+   console.log(error);
+   console.log('error')
+ })
+
+
+  followersArray.forEach((link)=>{
+  //  console.log(axios.get(followersArray[]))
+  axios.get(link)
+  .then((response) =>{
+    console.log(response.data);
+    container.appendChild(cardBuilder(response.data));
+  })
+    // console.log(i);
+// .then(() =>{
+//       container.appendChild(cardBuilder(response.data))
+//   })
+// .catch((error)=>{
+//   console.log(error);
+//   console.log('nah son');
+// })
+})
+
+
+
+
+
+  function cardBuilder(response){
+    // create elements
+      const card= document.createElement('div');
+      const userImage= document.createElement('img');
+      const cardInfo=document.createElement('div');
+      const userName=document.createElement('h3');
+      const githubName=document.createElement('P');
+      const userlocation=document.createElement('p');
+      const profileUrl=document.createElement('p');
+      const url=document.createElement('a');
+      const numfollowers=document.createElement('p');
+      const numfollowing=document.createElement('p');
+      const userbio=document.createElement('p');
+    // add classes
+     card.classList.add('card');
+     cardInfo.classList.add('card-info');
+     userName.classList.add('name');
+     githubName.classList.add('username');
+    
+    userImage.src= response.avatar_url;
+    userName.textContent= response.name;
+    githubName.textContent=response.login;
+    userlocation.textContent=`location: ${response.location}`;
+    profileUrl.textContent= `Profile:`;
+    url.href= response.html_url;
+    url.textContent= response.html_url;
+    numfollowers.textContent=`followers: ${response.followers}`;
+    numfollowing.textContent= `following: ${response.following}`;
+    userbio.textContent= response.bio;
+
+    //  structure elements
+    card.appendChild(userImage);
+    card.appendChild(cardInfo);
+    cardInfo.appendChild(userName);
+    cardInfo.appendChild(githubName);
+    cardInfo.appendChild(userlocation);
+    cardInfo.appendChild(profileUrl);
+    cardInfo.appendChild(numfollowers);
+    cardInfo.appendChild(numfollowing);
+    cardInfo.appendChild(userbio);
+    profileUrl.appendChild(url);
+    // text content and attributes
+    
+    // return
+    return card;
+ }
+
+
+//  cardBuilder();
+//  container.appendChild(cardBuilder(response.data.avatar_url,response.data.name,response.login,response.location,response.html_url,response.followers,response.data.following,response.data.bio));
